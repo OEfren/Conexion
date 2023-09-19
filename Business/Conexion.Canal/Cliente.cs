@@ -13,6 +13,8 @@ namespace Conexion.Canal
 
         public List<string> Mensajes = new List<string>();
 
+        protected Socket Socket;
+
         public bool Conectado { get; internal set; }
 
         public override void Iniciar()
@@ -20,7 +22,6 @@ namespace Conexion.Canal
 
             IPAddress address = IPAddress.Parse(Ip);
             IPEndPoint remoteEndPoint = new IPEndPoint(address, Port);
-
             Socket = new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             try
             {
@@ -32,9 +33,36 @@ namespace Conexion.Canal
             }
         }
 
+        public void EnviarMensaje(MensajeInfo info)
+        {
+            try
+            {
+                if (Socket != null)
+                {
+                    string mensaje = Newtonsoft.Json.JsonConvert.SerializeObject(info);
+                    byte[] content = Encoding.UTF8.GetBytes(mensaje);
+                    Socket.Send(content);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
         public override string ToString()
         {
             return Nombre;
         }
+
+        public override void Detener()
+        {
+            if (Socket != null)
+            {
+                Socket.Close();
+            }
+        }
+
+
     }
 }

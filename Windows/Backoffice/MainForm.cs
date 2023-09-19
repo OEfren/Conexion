@@ -31,7 +31,10 @@ namespace Backoffice
                     {
                         Invoke(() =>
                         {
-                            var canal = CanalClientes.Where(c => c.Ip == info.Servidor.Ip && c.Port == info.Servidor.Port).FirstOrDefault();
+                            var canal = CanalClientes.Where(
+                                c => c.Ip == info.Servidor.Ip && c.Port == info.Servidor.Port
+                            ).FirstOrDefault();
+
                             if (canal == null)
                             {
                                 canal = AgregarCliente(info.Servidor.Nombre, info.Servidor.Ip, info.Servidor.Port);
@@ -39,8 +42,7 @@ namespace Backoffice
                             string mensaje = string.Format("Recibido: {0}", info.Mensaje);
                             canal.Mensajes.Add(mensaje);
 
-                            lvContacto.ClearSelected();
-                            lvContacto.SelectedItem = canal;
+                            RefrescarHistorial();
                         });
                     }
                     catch (Exception ex)
@@ -49,10 +51,11 @@ namespace Backoffice
                     }
                 };
                 Task.Run(() => CanalServidor.Iniciar());
+                Text = string.Format("{0}:{1}", CanalServidor.Ip, CanalServidor.Port);
             }
             else
             {
-                MessageBox.Show("Error", "Configuración incompleta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Configuración incompleta", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             }
         }
@@ -109,11 +112,22 @@ namespace Backoffice
 
         private void lvContacto_SelectedValueChanged(object sender, EventArgs e)
         {
+            RefrescarHistorial();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            CanalClientes.ForEach(cliente => cliente.Detener());
+            CanalServidor?.Detener();
+        }
+
+        private void RefrescarHistorial()
+        {
             var item = lvContacto.SelectedItem;
             if (item != null)
             {
                 Cliente cliente = (Cliente)item;
-                Text = string.Format("Chatenado con {0} ", cliente.Nombre);
+                Text = string.Format("{0}:{1} Chateando con {0} ", CanalServidor.Ip, CanalServidor.Port, cliente.Nombre);
                 txtHistorial.Text = string.Empty;
                 cliente.Mensajes.ForEach(mensaje =>
                 {
@@ -123,14 +137,9 @@ namespace Backoffice
             }
             else
             {
-                Text = "Sin canal abierto";
+                Text = string.Format("{0}:{1}", CanalServidor.Ip, CanalServidor.Port);
             }
-        }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            CanalClientes.ForEach(cliente => cliente.Detener());
-            CanalServidor.Detener();
         }
     }
 }
