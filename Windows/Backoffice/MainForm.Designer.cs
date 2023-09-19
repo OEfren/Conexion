@@ -41,39 +41,35 @@
             // txtHistorial
             // 
             txtHistorial.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            txtHistorial.Location = new Point(154, 36);
-            txtHistorial.Margin = new Padding(3, 4, 3, 4);
+            txtHistorial.Location = new Point(135, 27);
             txtHistorial.Multiline = true;
             txtHistorial.Name = "txtHistorial";
             txtHistorial.ReadOnly = true;
             txtHistorial.ScrollBars = ScrollBars.Vertical;
-            txtHistorial.Size = new Size(516, 527);
+            txtHistorial.Size = new Size(452, 396);
             txtHistorial.TabIndex = 0;
-            txtHistorial.Text = "Wola";
             // 
             // txtMensaje
             // 
-            txtMensaje.Location = new Point(154, 600);
-            txtMensaje.Margin = new Padding(3, 4, 3, 4);
+            txtMensaje.Location = new Point(135, 450);
             txtMensaje.Name = "txtMensaje";
-            txtMensaje.Size = new Size(423, 27);
+            txtMensaje.Size = new Size(371, 23);
             txtMensaje.TabIndex = 1;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(154, 576);
+            label1.Location = new Point(135, 432);
             label1.Name = "label1";
-            label1.Size = new Size(64, 20);
+            label1.Size = new Size(51, 15);
             label1.TabIndex = 2;
             label1.Text = "Mensaje";
             // 
             // btnEnviar
             // 
-            btnEnviar.Location = new Point(585, 600);
-            btnEnviar.Margin = new Padding(3, 4, 3, 4);
+            btnEnviar.Location = new Point(512, 450);
             btnEnviar.Name = "btnEnviar";
-            btnEnviar.Size = new Size(86, 31);
+            btnEnviar.Size = new Size(75, 23);
             btnEnviar.TabIndex = 3;
             btnEnviar.Text = "Enviar";
             btnEnviar.UseVisualStyleBackColor = true;
@@ -82,37 +78,36 @@
             // lvContacto
             // 
             lvContacto.FormattingEnabled = true;
-            lvContacto.ItemHeight = 20;
-            lvContacto.Location = new Point(10, 36);
-            lvContacto.Margin = new Padding(3, 4, 3, 4);
+            lvContacto.ItemHeight = 15;
+            lvContacto.Location = new Point(9, 27);
             lvContacto.Name = "lvContacto";
-            lvContacto.Size = new Size(137, 524);
+            lvContacto.Size = new Size(120, 394);
             lvContacto.TabIndex = 4;
+            lvContacto.SelectedValueChanged += lvContacto_SelectedValueChanged;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(10, 12);
+            label2.Location = new Point(9, 9);
             label2.Name = "label2";
-            label2.Size = new Size(75, 20);
+            label2.Size = new Size(61, 15);
             label2.TabIndex = 5;
             label2.Text = "Contactos";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(154, 12);
+            label3.Location = new Point(135, 9);
             label3.Name = "label3";
-            label3.Size = new Size(65, 20);
+            label3.Size = new Size(51, 15);
             label3.TabIndex = 6;
             label3.Text = "Historial";
             // 
             // btnAgregar
             // 
-            btnAgregar.Location = new Point(14, 571);
-            btnAgregar.Margin = new Padding(3, 4, 3, 4);
+            btnAgregar.Location = new Point(12, 428);
             btnAgregar.Name = "btnAgregar";
-            btnAgregar.Size = new Size(79, 31);
+            btnAgregar.Size = new Size(69, 23);
             btnAgregar.TabIndex = 7;
             btnAgregar.Text = "Agregar";
             btnAgregar.UseVisualStyleBackColor = true;
@@ -120,9 +115,9 @@
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(685, 660);
+            ClientSize = new Size(599, 495);
             Controls.Add(btnAgregar);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -131,9 +126,9 @@
             Controls.Add(label1);
             Controls.Add(txtMensaje);
             Controls.Add(txtHistorial);
-            Margin = new Padding(3, 4, 3, 4);
             Name = "MainForm";
             Text = "Chat";
+            FormClosing += MainForm_FormClosing;
             Load += MainForm_Load;
             ResumeLayout(false);
             PerformLayout();

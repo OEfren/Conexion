@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -8,26 +9,41 @@ using System.Threading.Tasks;
 
 namespace Conexion.Canal
 {
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public class MensajeInfo
+    {
+        [JsonProperty]
+        public Servidor Servidor { get; set; }
+        [JsonProperty]
+        public string Mensaje { get; set; }
+    }
+
+
+    [JsonObject(MemberSerialization.OptIn)]
     public abstract class Canal
     {
 
         protected Socket Socket;
-
+        [JsonProperty]
         public string Nombre;
+        [JsonProperty]
         public string Ip;
+        [JsonProperty]
         public int Port;
         public int MaxCanales;
 
         public OnNuevoMensaje ListenerNuevoMensaje;
 
-        public delegate void OnNuevoMensaje(string message);
+        public delegate void OnNuevoMensaje(MensajeInfo mensaje);
 
         public abstract void Iniciar();
 
-        public virtual void EnviarMensaje(string mensaje)
+        public virtual void EnviarMensaje(MensajeInfo info)
         {
             if (Socket != null)
             {
+                string mensaje = Newtonsoft.Json.JsonConvert.SerializeObject(info);
                 byte[] content = Encoding.UTF8.GetBytes(mensaje);
                 Socket.Send(content);
             }

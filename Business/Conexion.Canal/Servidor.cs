@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Newtonsoft.Json;
 
 namespace Conexion.Canal
 {
@@ -26,10 +27,13 @@ namespace Conexion.Canal
                     int bytesRec = Socket.Receive(bytes);
                     string mensaje = Encoding.UTF8.GetString(bytes, 0, bytesRec);
 
-                    if (ListenerNuevoMensaje != null)
-                        ListenerNuevoMensaje(mensaje);
+                    if (mensaje != null)
+                    {
+                        MensajeInfo info = JsonConvert.DeserializeObject<MensajeInfo>(mensaje);
 
-                    EnviarMensaje("Recibido");
+                        if (info != null && ListenerNuevoMensaje != null)
+                            ListenerNuevoMensaje(info);
+                    }
                 }
             }
             catch (Exception ex)
@@ -40,12 +44,6 @@ namespace Conexion.Canal
             {
                 Detener();
             }
-        }
-
-        public override void EnviarMensaje(string mensaje)
-        {
-            mensaje = string.Format("Servidor - {0}: {1} ",  Nombre,  mensaje);
-            base.EnviarMensaje(mensaje);
         }
 
         
