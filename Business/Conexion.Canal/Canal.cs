@@ -13,6 +13,10 @@ namespace Conexion.Canal
     [JsonObject(MemberSerialization.OptIn)]
     public class MensajeInfo
     {
+
+        [JsonProperty]
+        public string IdPropietario { get; set; }
+
         [JsonProperty]
         public Servidor Servidor { get; set; }
         [JsonProperty]
@@ -35,7 +39,7 @@ namespace Conexion.Canal
 
         [JsonProperty]
         public int Port;
-        
+
         public int MaxCanales;
 
         public abstract void Iniciar();

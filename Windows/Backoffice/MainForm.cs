@@ -1,5 +1,6 @@
 using Backoffice.Dialog;
 using Conexion.Canal;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Backoffice
@@ -33,44 +34,58 @@ namespace Backoffice
                 {
                     try
                     {
-                        Invoke(() =>
+                        lock (info)
                         {
-                            if (info.Broadcast != null)
+                            Invoke(() =>
                             {
-                                var broadcast = Broadcasts.FirstOrDefault(c => c.ID == info.Broadcast.ID);
-                                if (broadcast == null)
+                                if (info != null)
                                 {
-                                    broadcast = AgregarBroadcast(info.Broadcast.ID, info.Broadcast.Nombre, info.Broadcast.Descripcion, info.Broadcast.IdPropietario);
-                                }
-                                string mensaje = string.Format("{0}:{1} {2}: {3}", info.Servidor.Ip, info.Servidor.Ip, info.Servidor.Nombre, info.Mensaje);
-                                broadcast.Mensajes.Add(mensaje);
 
-                                // Siendo el dueño del broadcast vamos a propagar a los demas
-                                if (broadcast.IdPropietario == Device)
-                                {
-                                    foreach (var cliente in lvContacto.Items)
+                                    string mensaje = string.Format("Recibido: {0}", info.Mensaje);
+
+                                    Cliente? canal = null;
+
+                                    if (info?.Broadcast != null)
                                     {
-                                        if (cliente != null && cliente is Cliente)
+                                        var broadcast = Broadcasts.FirstOrDefault(c => c.ID == info.Broadcast.ID);
+                                        if (broadcast != null)
                                         {
-                                            Cliente cancalCliente = (Cliente)cliente;
-                                            if (!(cancalCliente.Ip == info.Servidor.Ip && cancalCliente.Port == info.Servidor.Port))
-                                                EnviarMensaje(cancalCliente, mensaje, broadcast);
+                                            foreach (var cliente in CanalClientes)
+                                            {
+                                                if (cliente != null && cliente is Cliente)
+                                                {
+                                                    if (!(cliente.Ip == info.Servidor.Ip && cliente.Port == info.Servidor.Port && cliente.ID == null))
+                                                        EnviarMensaje(cliente, mensaje);
+                                                }
+                                            }
+                                            broadcast?.Mensajes?.Add(mensaje);
+                                            goto refrescar;
+                                        }
+                                        else
+                                        {
+                                            canal = CanalClientes.FirstOrDefault(c => c.ID == info.Broadcast.ID);
                                         }
                                     }
-                                } 
-                            }
-                            else
-                            {
-                                var canal = CanalClientes.FirstOrDefault(c => c.Ip == info.Servidor.Ip && c.Port == info.Servidor.Port);
-                                if (canal == null)
-                                {
-                                    canal = AgregarCliente(info.Servidor.Nombre, info.Servidor.Ip, info.Servidor.Port);
+                                    else
+                                    {
+                                        canal = CanalClientes.FirstOrDefault(c => c.Ip == info?.Servidor.Ip && c.Port == info.Servidor.Port);
+                                    }
+
+                                    if (canal == null)
+                                    {
+                                        canal = AgregarCliente(info?.Broadcast?.Nombre ?? info.Servidor.Nombre, info.Servidor.Ip, info.Servidor.Port);
+                                        canal.ID = info?.Broadcast?.ID ?? null;
+                                    }
+
+
+                                    canal?.Mensajes?.Add(mensaje);
+
+                                    refrescar:
+                                        RefrescarHistorial();
                                 }
-                                string mensaje = string.Format("Recibido: {0}", info.Mensaje);
-                                canal.Mensajes.Add(mensaje);
-                            }
-                            RefrescarHistorial();
-                        });
+                            });
+                        }
+                        
                     }
                     catch (Exception ex)
                     {
@@ -107,19 +122,28 @@ namespace Backoffice
                 if (item is Cliente)
                 {
                     Cliente cliente = (Cliente)item;
-                    EnviarMensaje(cliente, mensaje);
+                    EnviarMensaje(cliente, mensaje, cliente.ID != null ? new() { ID = cliente.ID, Nombre = cliente.Nombre } : null);
                 }
                 else if (item is Broadcast)
                 {
                     Broadcast broadcast = (Broadcast)item;
-                    broadcast.Mensajes.Add(txtMensaje.Text);
-
-                    foreach (var cliente in lvContacto.Items)
+                    if (broadcast.IdPropietario == Device)
                     {
-                        if (cliente != null && cliente is Cliente)
+                        broadcast.Mensajes.Add(txtMensaje.Text);
+                        foreach (var cliente in lvContacto.Items)
                         {
-                            EnviarMensaje((Cliente)cliente, mensaje, (Broadcast)item);
+                            if (cliente != null && cliente is Cliente)
+                            {
+                                if (((Cliente)cliente).ID == null)
+                                    EnviarMensaje((Cliente)cliente, mensaje, (Broadcast)item);
+                            }
                         }
+                    }
+                    else
+                    {
+                        Cliente? cliente = CanalClientes.FirstOrDefault(c => c.ID == broadcast?.ID);
+                        if (cliente != null)    
+                            EnviarMensaje(cliente, mensaje);
                     }
                 }
                 string mensajeText = string.Format("Enviado: {0}", mensaje);
@@ -140,7 +164,7 @@ namespace Backoffice
             info.Mensaje = mensaje;
             info.Broadcast = broadcast;
 
-            if (broadcast == null)
+            if (!(broadcast?.IdPropietario == Device))
             {
                 cliente.Mensajes.Add(string.Format("Enviado: {0}", info.Mensaje));
             }
