@@ -1,4 +1,5 @@
 using Backoffice.Dialog;
+using Backoffice.Game.TicTacToe;
 using Conexion.Canal;
 using System.Globalization;
 using System.Windows.Forms;
@@ -80,12 +81,12 @@ namespace Backoffice
 
                                     canal?.Mensajes?.Add(mensaje);
 
-                                    refrescar:
-                                        RefrescarHistorial();
+                                refrescar:
+                                    RefrescarHistorial();
                                 }
                             });
                         }
-                        
+
                     }
                     catch (Exception ex)
                     {
@@ -142,7 +143,7 @@ namespace Backoffice
                     else
                     {
                         Cliente? cliente = CanalClientes.FirstOrDefault(c => c.ID == broadcast?.ID);
-                        if (cliente != null)    
+                        if (cliente != null)
                             EnviarMensaje(cliente, mensaje);
                     }
                 }
@@ -248,6 +249,15 @@ namespace Backoffice
             if (result == DialogResult.OK)
             {
                 AgregarBroadcast(Guid.NewGuid().ToString(), dlgCanal.Nombre, dlgCanal.Descripcion, Device);
+            }
+        }
+
+        private void mnuItemTicTacToe_Click(object sender, EventArgs e)
+        {
+            var item = lvContacto.SelectedItem;
+            if (item != null)
+            {
+
             }
         }
     }
