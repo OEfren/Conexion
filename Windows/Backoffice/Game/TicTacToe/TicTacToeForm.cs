@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Conexion.Canal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,8 +13,8 @@ namespace Backoffice.Game.TicTacToe
 {
     public partial class TicTacToeForm : Form
     {
+        public Cliente ClienteCanal { get; set; }
         public string IdJuego { get; set; }
-
         public string IdJugador { get; set; }
         public string IdJugador1 { get; set; }
         public string IdJugador2 { get; set; }
@@ -107,7 +108,7 @@ namespace Backoffice.Game.TicTacToe
 
                     InWrite(Turno, GetPosicion(button.Name));
                     if (OnSelectedItem != null)
-                        OnSelectedItem(IdJuego, Turno, GetPosicion(button.Name));
+                        OnSelectedItem(IdJuego, IdJugador, GetPosicion(button.Name));
                 }
                 else
                 {

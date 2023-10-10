@@ -24,6 +24,9 @@ namespace Conexion.Canal
 
         [JsonProperty]
         public Broadcast Broadcast { get; set; }
+
+        [JsonProperty]
+        public TicTacToeInfo TicTacToe { get; set; }
     }
 
 
@@ -73,5 +76,22 @@ namespace Conexion.Canal
             return Nombre;
         }
 
+    }
+
+    [JsonObject(MemberSerialization.OptIn)]
+    public class TicTacToeInfo
+    {
+        [JsonProperty]
+        public string? IdJuego { get; set; }
+        [JsonProperty]
+        public string? IdDevice { get; set; }
+        [JsonProperty]
+        public string? IdJugador1 { get; set; }
+        [JsonProperty]
+        public string? IdJugador2 { get; set; }
+        [JsonProperty]
+        public string? Turno { get; set; }
+        [JsonProperty]
+        public int? Posicion { get; set; }
     }
 }

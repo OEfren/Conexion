@@ -1,6 +1,7 @@
 using Backoffice.Dialog;
 using Backoffice.Game.TicTacToe;
 using Conexion.Canal;
+using Newtonsoft.Json;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -12,6 +13,7 @@ namespace Backoffice
         Servidor CanalServidor;
         List<Cliente> CanalClientes = new List<Cliente>();
         List<Broadcast> Broadcasts = new List<Broadcast>();
+        List<TicTacToeForm> TicTacToes = new List<TicTacToeForm>();
 
         string Device;
 
@@ -41,7 +43,6 @@ namespace Backoffice
                             {
                                 if (info != null)
                                 {
-
                                     string mensaje = string.Format("Recibido: {0}", info.Mensaje);
 
                                     Cliente? canal = null;
@@ -78,12 +79,29 @@ namespace Backoffice
                                         canal.ID = info?.Broadcast?.ID ?? null;
                                     }
 
+                                    if (info?.TicTacToe != null)
+                                    {
 
+                                        CrearTicTacToe
+                                        (
+                                            info.TicTacToe.IdJuego,
+                                            Device,
+                                            info.TicTacToe.IdJugador1,
+                                            Device,
+                                            info.TicTacToe.Turno,
+                                            canal,
+                                            info.TicTacToe.Posicion
+                                        );
+                                        return;
+                                    }
+                                    
                                     canal?.Mensajes?.Add(mensaje);
 
                                 refrescar:
                                     RefrescarHistorial();
                                 }
+
+                                    
                             });
                         }
 
@@ -158,12 +176,13 @@ namespace Backoffice
             }
         }
 
-        private void EnviarMensaje(Cliente cliente, string mensaje, Broadcast broadcast = null)
+        private void EnviarMensaje(Cliente cliente, string mensaje, Broadcast broadcast = null, TicTacToeInfo ticTacToeInfo = null)
         {
             MensajeInfo info = new MensajeInfo();
             info.Servidor = CanalServidor;
             info.Mensaje = mensaje;
             info.Broadcast = broadcast;
+            info.TicTacToe = ticTacToeInfo;
 
             if (!(broadcast?.IdPropietario == Device))
             {
@@ -257,7 +276,51 @@ namespace Backoffice
             var item = lvContacto.SelectedItem;
             if (item != null)
             {
+                CrearTicTacToe(null, Device, Device, null, Device, (Cliente)item);
+            }
+        }
 
+        private void CrearTicTacToe(string? idJuego, string idDevice, string idJugador1, string? idJugador2, string turno, Cliente cliente, int? posicion = null)
+        {
+            var juego = TicTacToes.FirstOrDefault(t => t.IdJuego == idJuego);
+
+            if (juego == null)
+            {
+                juego = new TicTacToeForm();
+                juego.Text = Text;
+                juego.ClienteCanal = cliente;
+                juego.IdJuego = idJuego ?? Guid.NewGuid().ToString();
+                juego.IdJugador = idDevice;
+                juego.IdJugador1 = idJugador1;
+                if (idJugador2 != null)
+                    juego.IdJugador2 = idJugador2;
+                juego.Turno = turno;
+                juego.OnSelectedItem = (string idJuego, string idJugador, int posicion) =>
+                {
+                    TicTacToeInfo ticTacToe = new TicTacToeInfo();
+                    ticTacToe.IdJuego = idJuego;
+                    ticTacToe.IdDevice = Device;
+                    ticTacToe.IdJugador1 = juego.IdJugador1;
+                    ticTacToe.IdJugador2 = juego.IdJugador2;
+                    ticTacToe.Posicion = posicion;
+                    ticTacToe.Turno = idJugador;
+                    EnviarMensaje(juego.ClienteCanal, string.Empty, null, ticTacToe);
+                };
+
+                juego.Show();
+                TicTacToes.Add(juego);   
+            }
+            else
+            {
+                if (juego.IdJugador2 == null && idJugador2 != null)
+                {
+                    juego.IdJugador2 = idJugador2;
+                }
+            }
+
+            if (posicion.HasValue)
+            {
+                juego.InWrite(turno, posicion.Value);
             }
         }
     }
