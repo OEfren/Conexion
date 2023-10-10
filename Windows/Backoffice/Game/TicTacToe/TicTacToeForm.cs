@@ -81,9 +81,9 @@ namespace Backoffice.Game.TicTacToe
             return "O";
         }
 
-        public int GetPosicion(string nameButton) 
+        public int GetPosicion(string nameButton)
         {
-            return  int.Parse(nameButton.Replace("button", string.Empty));
+            return int.Parse(nameButton.Replace("button", string.Empty));
         }
 
         private void CambiarTurno()
@@ -98,11 +98,11 @@ namespace Backoffice.Game.TicTacToe
         {
             if (IdJugador != Turno)
             {
-                MessageBox.Show("Esperando que el otro jugador eliga", "Esperando turno", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                MessageBox.Show("Esperando que el otro jugador eliga", "Esperando turno", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
-                Button button = (Button)sender; 
+                Button button = (Button)sender;
                 if (button.Text == string.Empty)
                 {
 
@@ -126,7 +126,7 @@ namespace Backoffice.Game.TicTacToe
                 MessageBox.Show("El jugador uno a ganado");
                 Close();
             }
-            
+
             bool dos = ValidaGanador("OOO");
             if (dos)
             {

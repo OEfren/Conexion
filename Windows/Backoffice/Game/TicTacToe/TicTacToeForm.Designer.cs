@@ -131,6 +131,7 @@
             label1.Size = new Size(121, 19);
             label1.TabIndex = 9;
             label1.Text = "Jugador 1";
+            label1.Visible = false;
             // 
             // label2
             // 
@@ -139,6 +140,7 @@
             label2.Size = new Size(121, 19);
             label2.TabIndex = 10;
             label2.Text = "Jugador 2";
+            label2.Visible = false;
             // 
             // lblJugador1
             // 
@@ -147,6 +149,7 @@
             lblJugador1.Name = "lblJugador1";
             lblJugador1.Size = new Size(121, 19);
             lblJugador1.TabIndex = 11;
+            lblJugador1.Visible = false;
             // 
             // lblJugador2
             // 
@@ -155,6 +158,7 @@
             lblJugador2.Name = "lblJugador2";
             lblJugador2.Size = new Size(121, 19);
             lblJugador2.TabIndex = 12;
+            lblJugador2.Visible = false;
             // 
             // TicTacToeForm
             // 
