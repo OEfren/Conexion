@@ -34,12 +34,14 @@
             label1 = new Label();
             btnEnviar = new Button();
             lvContacto = new ListBox();
+            contextMenuStrip1 = new ContextMenuStrip(components);
+            mnuItemTicTacToe = new ToolStripMenuItem();
             label2 = new Label();
             label3 = new Label();
             btnAgregar = new Button();
             btnCanal = new Button();
-            contextMenuStrip1 = new ContextMenuStrip(components);
-            mnuItemTicTacToe = new ToolStripMenuItem();
+            mnuItemEnviarArchivo = new ToolStripMenuItem();
+            dlgFile = new OpenFileDialog();
             contextMenuStrip1.SuspendLayout();
             SuspendLayout();
             // 
@@ -93,6 +95,19 @@
             lvContacto.TabIndex = 4;
             lvContacto.SelectedValueChanged += lvContacto_SelectedValueChanged;
             // 
+            // contextMenuStrip1
+            // 
+            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { mnuItemTicTacToe, mnuItemEnviarArchivo });
+            contextMenuStrip1.Name = "contextMenuStrip1";
+            contextMenuStrip1.Size = new Size(181, 70);
+            // 
+            // mnuItemTicTacToe
+            // 
+            mnuItemTicTacToe.Name = "mnuItemTicTacToe";
+            mnuItemTicTacToe.Size = new Size(180, 22);
+            mnuItemTicTacToe.Text = "Jugar Tic Tac Toe";
+            mnuItemTicTacToe.Click += mnuItemTicTacToe_Click;
+            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -131,18 +146,16 @@
             btnCanal.UseVisualStyleBackColor = true;
             btnCanal.Click += btnCanal_Click;
             // 
-            // contextMenuStrip1
+            // mnuItemEnviarArchivo
             // 
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] { mnuItemTicTacToe });
-            contextMenuStrip1.Name = "contextMenuStrip1";
-            contextMenuStrip1.Size = new Size(162, 26);
+            mnuItemEnviarArchivo.Name = "mnuItemEnviarArchivo";
+            mnuItemEnviarArchivo.Size = new Size(180, 22);
+            mnuItemEnviarArchivo.Text = "Enviar archivo...";
+            mnuItemEnviarArchivo.Click += mnuItemEnviarArchivo_Click;
             // 
-            // mnuItemTicTacToe
+            // dlgFile
             // 
-            mnuItemTicTacToe.Name = "mnuItemTicTacToe";
-            mnuItemTicTacToe.Size = new Size(180, 22);
-            mnuItemTicTacToe.Text = "Jugar Tic Tac Toe";
-            mnuItemTicTacToe.Click += mnuItemTicTacToe_Click;
+            dlgFile.FileName = "openFileDialog1";
             // 
             // MainForm
             // 
@@ -180,5 +193,7 @@
         private Button btnCanal;
         private ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem mnuItemTicTacToe;
+        private ToolStripMenuItem mnuItemEnviarArchivo;
+        private OpenFileDialog dlgFile;
     }
 }

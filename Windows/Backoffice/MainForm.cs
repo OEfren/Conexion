@@ -2,7 +2,10 @@ using Backoffice.Dialog;
 using Backoffice.Game.TicTacToe;
 using Conexion.Canal;
 using Newtonsoft.Json;
+using System.Collections;
 using System.Globalization;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Backoffice
@@ -14,6 +17,7 @@ namespace Backoffice
         List<Cliente> CanalClientes = new List<Cliente>();
         List<Broadcast> Broadcasts = new List<Broadcast>();
         List<TicTacToeForm> TicTacToes = new List<TicTacToeForm>();
+        List<ArchivoInfo> Archivos = new List<ArchivoInfo>();
 
         string Device;
 
@@ -21,6 +25,8 @@ namespace Backoffice
         {
             InitializeComponent();
             Device = Guid.NewGuid().ToString();
+            //Console.WriteLine("Prueba de texto");
+            System.Diagnostics.Debug.WriteLine("Prueba de texto");
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -94,14 +100,60 @@ namespace Backoffice
                                         );
                                         return;
                                     }
-                                    
+
+                                    if (info?.Archivo != null)
+                                    {
+                                        if(info.Archivo.IsCompleto)
+                                        {
+                                            Task.Run(() =>
+                                            {
+                                                var archivo = Archivos.FirstOrDefault(a => a.ID == info.Archivo.ID);
+                                                if (archivo != null)
+                                                {
+                                                    DirectoryInfo directorio = System.IO.Directory.CreateDirectory("Recibido");
+                                                    archivo.Path = directorio.FullName + "\\" + archivo.Name;
+                                                    using (var fs = new FileStream(archivo.Path, FileMode.Create, FileAccess.Write))
+                                                    {
+                                                        archivo.Paths.ForEach(path =>
+                                                        {
+                                                            byte[] content = File.ReadAllBytes(path);
+                                                            fs.Write(content, 0, content.Length);
+                                                        });                                                        
+                                                    }
+                                                }
+
+                                                Invoke(() =>
+                                                {
+                                                    MessageBox.Show(string.Format("Se ha recibio el archivo {0}, se encuentra en la carpeta {1}", archivo.Name, archivo.Path), "Archivo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                                });
+
+                                            });
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            DirectoryInfo directorio = System.IO.Directory.CreateDirectory("Recibido");
+                                            var archivo = Archivos.FirstOrDefault(a => a.ID == info.Archivo.ID);
+                                            if (archivo == null)
+                                            {
+                                                Archivos.Add(info.Archivo);
+                                            }
+                                            string tempName = directorio.FullName + "\\" + Guid.NewGuid().ToString();
+                                            info.Archivo.Paths.Add(tempName);
+                                            System.IO.File.WriteAllBytes(tempName, Encoding.UTF8.GetBytes(info.Archivo.Content));
+                                            info.Archivo.Content = null;
+
+                                            return;
+                                        }
+                                    }
+
                                     canal?.Mensajes?.Add(mensaje);
 
                                 refrescar:
                                     RefrescarHistorial();
                                 }
 
-                                    
+
                             });
                         }
 
@@ -176,7 +228,7 @@ namespace Backoffice
             }
         }
 
-        private void EnviarMensaje(Cliente cliente, string mensaje, Broadcast broadcast = null, TicTacToeInfo ticTacToeInfo = null)
+        private void EnviarMensaje(Cliente cliente, string mensaje, Broadcast broadcast = null, TicTacToeInfo ticTacToeInfo = null, ArchivoInfo archivo = null)
         {
             MensajeInfo info = new MensajeInfo();
             info.Data = Guid.NewGuid().ToString();
@@ -184,6 +236,7 @@ namespace Backoffice
             info.Mensaje = mensaje;
             info.Broadcast = broadcast;
             info.TicTacToe = ticTacToeInfo;
+            info.Archivo = archivo;
 
             if (!(broadcast?.IdPropietario == Device))
             {
@@ -309,7 +362,7 @@ namespace Backoffice
                 };
 
                 juego.Show();
-                TicTacToes.Add(juego);   
+                TicTacToes.Add(juego);
             }
             else
             {
@@ -322,6 +375,60 @@ namespace Backoffice
             if (posicion.HasValue)
             {
                 juego.InWrite(turno, posicion.Value);
+            }
+        }
+
+        private void mnuItemEnviarArchivo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var item = lvContacto.SelectedItem;
+                if (item != null)
+                {
+                    DialogResult result = dlgFile.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        Task.Run(() => 
+                        {
+                            string fileName = dlgFile.FileName;
+                            FileInfo fileInfo = new FileInfo(fileName);
+                            string ID = Guid.NewGuid().ToString();
+                            using (Stream source = File.OpenRead(fileName))
+                            {
+                                ArchivoInfo archivo;
+                                byte[] buffer = new byte[256];
+                                int bytesRead;
+                                while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
+                                {
+                                    archivo = new ArchivoInfo();
+                                    archivo.ID = ID;
+                                    archivo.Content = Convert.ToBase64String(buffer);
+
+                                    Invoke(() =>
+                                    {
+                                        Cliente cliente = (Cliente)item;
+                                        EnviarMensaje(cliente, "Enviando archivo " + fileInfo.Name, null, null, archivo);
+                                    });
+                                }
+
+                                archivo = new ArchivoInfo();
+                                archivo.ID = ID;
+                                archivo.IsCompleto = true;
+                                archivo.Name = fileInfo.Name;
+                                Invoke(() =>
+                                {
+                                    Cliente cliente = (Cliente)item;
+                                    EnviarMensaje(cliente, string.Format("Archivo {0} enviado", fileInfo.Name), null, null, archivo);
+                                });
+                            }
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                MessageBox.Show("Ocurrió un problema al enviar el archivo", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

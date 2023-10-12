@@ -22,8 +22,12 @@ namespace Conexion.Canal
 
         [JsonProperty]
         public Servidor Servidor { get; set; }
+       
         [JsonProperty]
         public string Mensaje { get; set; }
+
+        [JsonProperty]
+        public ArchivoInfo Archivo { get; set; }
 
         [JsonProperty]
         public Broadcast Broadcast { get; set; }
@@ -58,6 +62,7 @@ namespace Conexion.Canal
     {
         [JsonProperty]
         public string ID { get; set; }
+
         [JsonProperty]
         public string Nombre { get; set; }
 
@@ -96,5 +101,30 @@ namespace Conexion.Canal
         public string? Turno { get; set; }
         [JsonProperty]
         public int? Posicion { get; set; }
+    }
+
+    public class ArchivoInfo
+    {
+        [JsonProperty]
+        public string ID { get; set; }
+
+        [JsonProperty]
+        public string Name { get; set; }
+
+        [JsonProperty]
+        public string Content { get; set; }
+
+        public string Path { get; set; }
+
+        public List<string> Paths { get; set; }
+
+        [JsonProperty]
+        public bool IsCompleto { get; set; }
+
+        public ArchivoInfo()
+        {
+            Paths = new List<string>();
+            Content = string.Empty;
+        }
     }
 }

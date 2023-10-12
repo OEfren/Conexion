@@ -4,6 +4,7 @@ using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
 using Conexion.Security;
+using System.Globalization;
 
 namespace Conexion.Canal
 {
@@ -36,17 +37,21 @@ namespace Conexion.Canal
                         {
                             try
                             {
-                                byte[] bytes = new byte[1024];
+                                byte[] bytes = new byte[944];
                                 int bytesRec = socket.Receive(bytes);
-                                string mensaje = Encoding.UTF8.GetString(bytes, 0, bytesRec);
-                                if (mensaje != null)
+                                lock (socket)
                                 {
-                                    Console.WriteLine(mensaje.ToString());
-                                    string key = mensaje.Substring(0, 36);
-                                    mensaje = mensaje.Substring(36); 
-                                    MensajeInfo info = JsonConvert.DeserializeObject<MensajeInfo>(Encrypter.DecryptString(mensaje,key));
-                                    if (info != null && ListenerNuevoMensaje != null)
-                                        ListenerNuevoMensaje(info);
+                                    string mensaje = Encoding.UTF8.GetString(bytes, 0, bytesRec);
+                                    System.Diagnostics.Debug.WriteLine("Recibiendo: " + mensaje);
+                                    if (mensaje != null)
+                                    {
+                                        Console.WriteLine(mensaje.ToString());
+                                        string key = mensaje.Substring(0, 36);
+                                        mensaje = mensaje.Substring(36);
+                                        MensajeInfo info = JsonConvert.DeserializeObject<MensajeInfo>(Encrypter.DecryptString(mensaje, key));
+                                        if (info != null && ListenerNuevoMensaje != null)
+                                            ListenerNuevoMensaje(info);
+                                    }
                                 }
                             }
                             catch (System.Net.Sockets.SocketException ex)

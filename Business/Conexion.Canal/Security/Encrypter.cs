@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,70 +12,56 @@ namespace Conexion.Security
 
         public static string EncryptString(string text, string key)
         {
-            int Temp, j, n;
-            int[] UserKeyASCIIS;
-            int[] TextASCIIS;
-            string rtn = String.Empty;
-            n = key.Length;
-            j = 0;
+            try
+            {
+                byte[] keyArray;
+                byte[] Arreglo_a_Cifrar = UTF8Encoding.UTF8.GetBytes(text);
 
-            //Get UserKey characters
-            UserKeyASCIIS = new int[key.Length];
-            for (int i = 0; i < key.Length; i++)
-            {
-                UserKeyASCIIS[i] = (int)key[i];
+                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
+                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+                hashmd5.Clear();
+
+                TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
+                tdes.Key = keyArray;
+                tdes.Mode = CipherMode.ECB;
+                tdes.Padding = PaddingMode.PKCS7;
+                ICryptoTransform cTransform = tdes.CreateEncryptor();
+                byte[] ArrayResultado = cTransform.TransformFinalBlock(Arreglo_a_Cifrar, 0, Arreglo_a_Cifrar.Length);
+                tdes.Clear();
+
+                return Convert.ToBase64String(ArrayResultado, 0, ArrayResultado.Length);
             }
-            //Get Text characters
-            TextASCIIS = new int[text.Length];
-            for (int i = 0; i < text.Length; i++)
+            catch (Exception ex)
             {
-                TextASCIIS[i] = (int)text[i];
+                throw new Exception("Error al encriptar el texto");
             }
-            //Encrypt
-            for (int i = 0; i < text.Length; i++)
-            {
-                j = (int)j + 1 >= n ? 1 : j + 1;
-                Temp = TextASCIIS[i] + UserKeyASCIIS[j - 1];
-                if (Temp > 255) Temp -= -255;
-                rtn += System.Convert.ToChar(Temp);
-            }
-            return rtn;
         }
 
         public static string DecryptString(string text, string key)
         {
-            int Temp, j, n;
-            int[] UserKeyASCIIS;
-            int[] TextASCIIS;
-            string rtn = String.Empty;
-            n = key.Length;
-            j = 0;
-
-            //Get UserKey characters
-            UserKeyASCIIS = new int[key.Length];
-            for (int i = 0; i < key.Length; i++)
+            try
             {
-                UserKeyASCIIS[i] = (int)key[i];
-            }
-            //Get Text characters
-            TextASCIIS = new int[text.Length];
-            for (int i = 0; i < text.Length; i++)
-            {
-                TextASCIIS[i] = (int)text[i];
-            }
+                byte[] keyArray;
+                byte[] Array_a_Descifrar = Convert.FromBase64String(text);
 
-            for (int i = 0; i < text.Length; i++)
-            {
-                j = (int)j + 1 >= n ? 1 : j + 1;
-                Temp = TextASCIIS[i] - UserKeyASCIIS[j - 1];
+                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
+                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+                hashmd5.Clear();
 
-                if (Temp < 0)
-                {
-                    Temp = Temp + 255;
-                }
-                rtn += System.Convert.ToChar(Temp);
+                TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
+                tdes.Key = keyArray;
+                tdes.Mode = CipherMode.ECB;
+                tdes.Padding = PaddingMode.PKCS7;
+                ICryptoTransform cTransform = tdes.CreateDecryptor();
+                byte[] resultArray = cTransform.TransformFinalBlock(Array_a_Descifrar, 0, Array_a_Descifrar.Length);
+                tdes.Clear();
+
+                return UTF8Encoding.UTF8.GetString(resultArray);
             }
-            return rtn;
+            catch (Exception ex)
+            {
+                throw new Exception("Error al desencriptar el texto");
+            }
         }
 
     }

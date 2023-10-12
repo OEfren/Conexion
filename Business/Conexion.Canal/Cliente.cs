@@ -42,7 +42,9 @@ namespace Conexion.Canal
                 if (Socket != null)
                 {
                     string mensaje = Newtonsoft.Json.JsonConvert.SerializeObject(info);
-                    byte[] content = Encoding.UTF8.GetBytes(info.Data + Encrypter.EncryptString(mensaje, info.Data));
+                    string enviar = info.Data + Encrypter.EncryptString(mensaje, info.Data);
+                    System.Diagnostics.Debug.WriteLine("Enviando: " + enviar);
+                    byte[] content = Encoding.UTF8.GetBytes(enviar);
                     Socket.Send(content);
                 }
             }
