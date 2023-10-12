@@ -3,6 +3,7 @@ using System.Net;
 using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
+using Conexion.Security;
 
 namespace Conexion.Canal
 {
@@ -40,7 +41,10 @@ namespace Conexion.Canal
                                 string mensaje = Encoding.UTF8.GetString(bytes, 0, bytesRec);
                                 if (mensaje != null)
                                 {
-                                    MensajeInfo info = JsonConvert.DeserializeObject<MensajeInfo>(mensaje);
+                                    Console.WriteLine(mensaje.ToString());
+                                    string key = mensaje.Substring(0, 36);
+                                    mensaje = mensaje.Substring(36); 
+                                    MensajeInfo info = JsonConvert.DeserializeObject<MensajeInfo>(Encrypter.DecryptString(mensaje,key));
                                     if (info != null && ListenerNuevoMensaje != null)
                                         ListenerNuevoMensaje(info);
                                 }

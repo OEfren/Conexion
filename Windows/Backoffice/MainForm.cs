@@ -179,6 +179,7 @@ namespace Backoffice
         private void EnviarMensaje(Cliente cliente, string mensaje, Broadcast broadcast = null, TicTacToeInfo ticTacToeInfo = null)
         {
             MensajeInfo info = new MensajeInfo();
+            info.Data = Guid.NewGuid().ToString();
             info.Servidor = CanalServidor;
             info.Mensaje = mensaje;
             info.Broadcast = broadcast;

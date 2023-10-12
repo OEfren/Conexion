@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Conexion.Security;
 
 namespace Conexion.Canal
 {
@@ -41,7 +42,7 @@ namespace Conexion.Canal
                 if (Socket != null)
                 {
                     string mensaje = Newtonsoft.Json.JsonConvert.SerializeObject(info);
-                    byte[] content = Encoding.UTF8.GetBytes(mensaje);
+                    byte[] content = Encoding.UTF8.GetBytes(info.Data + Encrypter.EncryptString(mensaje, info.Data));
                     Socket.Send(content);
                 }
             }

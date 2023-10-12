@@ -15,6 +15,9 @@ namespace Conexion.Canal
     {
 
         [JsonProperty]
+        public string Data { get; set; }
+
+        [JsonProperty]
         public string IdPropietario { get; set; }
 
         [JsonProperty]
