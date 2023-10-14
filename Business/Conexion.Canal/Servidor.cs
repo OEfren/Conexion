@@ -37,7 +37,7 @@ namespace Conexion.Canal
                         {
                             try
                             {
-                                byte[] bytes = new byte[944];
+                                byte[] bytes = new byte[1702];
                                 int bytesRec = socket.Receive(bytes);
                                 lock (socket)
                                 {

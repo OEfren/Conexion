@@ -1,6 +1,7 @@
 using Backoffice.Dialog;
 using Backoffice.Game.TicTacToe;
 using Conexion.Canal;
+using Conexion.Security;
 using Newtonsoft.Json;
 using System.Collections;
 using System.Globalization;
@@ -25,8 +26,6 @@ namespace Backoffice
         {
             InitializeComponent();
             Device = Guid.NewGuid().ToString();
-            //Console.WriteLine("Prueba de texto");
-            System.Diagnostics.Debug.WriteLine("Prueba de texto");
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -111,7 +110,7 @@ namespace Backoffice
                                                 if (archivo != null)
                                                 {
                                                     DirectoryInfo directorio = System.IO.Directory.CreateDirectory("Recibido");
-                                                    archivo.Path = directorio.FullName + "\\" + archivo.Name;
+                                                    archivo.Path = directorio.FullName + "\\" + info.Archivo.Name;
                                                     using (var fs = new FileStream(archivo.Path, FileMode.Create, FileAccess.Write))
                                                     {
                                                         archivo.Paths.ForEach(path =>
@@ -120,6 +119,8 @@ namespace Backoffice
                                                             fs.Write(content, 0, content.Length);
                                                         });                                                        
                                                     }
+
+                                                    archivo.Paths.ForEach(path => System.IO.File.Delete(path));
                                                 }
 
                                                 Invoke(() =>
@@ -136,12 +137,12 @@ namespace Backoffice
                                             var archivo = Archivos.FirstOrDefault(a => a.ID == info.Archivo.ID);
                                             if (archivo == null)
                                             {
-                                                Archivos.Add(info.Archivo);
+                                                Archivos.Add(archivo = info.Archivo);
                                             }
                                             string tempName = directorio.FullName + "\\" + Guid.NewGuid().ToString();
-                                            info.Archivo.Paths.Add(tempName);
-                                            System.IO.File.WriteAllBytes(tempName, Encoding.UTF8.GetBytes(info.Archivo.Content));
-                                            info.Archivo.Content = null;
+                                            archivo.Paths.Add(tempName);
+                                            System.IO.File.WriteAllBytes(tempName, info.Archivo.Content);
+                                            archivo.Content = null;
 
                                             return;
                                         }
@@ -396,18 +397,18 @@ namespace Backoffice
                             using (Stream source = File.OpenRead(fileName))
                             {
                                 ArchivoInfo archivo;
-                                byte[] buffer = new byte[256];
+                                byte[] buffer = new byte[1024];
                                 int bytesRead;
                                 while ((bytesRead = source.Read(buffer, 0, buffer.Length)) > 0)
                                 {
                                     archivo = new ArchivoInfo();
                                     archivo.ID = ID;
-                                    archivo.Content = Convert.ToBase64String(buffer);
+                                    archivo.Content = buffer;
 
                                     Invoke(() =>
                                     {
                                         Cliente cliente = (Cliente)item;
-                                        EnviarMensaje(cliente, "Enviando archivo " + fileInfo.Name, null, null, archivo);
+                                        EnviarMensaje(cliente, string.Empty, null, null, archivo);
                                     });
                                 }
 

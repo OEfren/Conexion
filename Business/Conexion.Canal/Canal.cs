@@ -112,7 +112,7 @@ namespace Conexion.Canal
         public string Name { get; set; }
 
         [JsonProperty]
-        public string Content { get; set; }
+        public byte[] Content { get; set; }
 
         public string Path { get; set; }
 
@@ -124,7 +124,6 @@ namespace Conexion.Canal
         public ArchivoInfo()
         {
             Paths = new List<string>();
-            Content = string.Empty;
         }
     }
 }
