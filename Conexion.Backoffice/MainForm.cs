@@ -2,13 +2,17 @@ using Backoffice.Dialog;
 using Backoffice.Game.TicTacToe;
 using Conexion.Canal;
 using Conexion.Security;
+using Conexion.VideoWin;
 using Newtonsoft.Json;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Backoffice
 {
@@ -45,13 +49,13 @@ namespace Backoffice
                     {
                         lock (info)
                         {
-                            Invoke(() =>
+                            this.Invoke(new Action(() =>
                             {
                                 if (info != null)
                                 {
                                     string mensaje = string.Format("Recibido: {0}", info.Mensaje);
 
-                                    Cliente? canal = null;
+                                    Cliente canal = null;
 
                                     if (info?.Broadcast != null)
                                     {
@@ -124,17 +128,17 @@ namespace Backoffice
                                                     archivo.Paths.ForEach(path => System.IO.File.Delete(path));
                                                     if (archivo.Path.EndsWith("mp4"))
                                                     {
-                                                        //VideoForm form = new VideoForm();
+                                                        
 
-                                                        MediaPlayer player;
+                                                        Action act1 = (() =>
+                                                        {
+                                                            VideoDialog video = new VideoDialog();
+                                                            video.Show(archivo.Path);
+                                                        });
+                                                        this.BeginInvoke(act1);
                                                     }
                                                 }
-
-                                                Invoke(() =>
-                                                {
-                                                    MessageBox.Show(string.Format("Se ha recibio el archivo {0}, se encuentra en la carpeta {1}", archivo.Name, archivo.Path), "Archivo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                                });
-
+                                                MessageBox.Show(string.Format("Se ha recibio el archivo {0}, se encuentra en la carpeta {1}", archivo.Name, archivo.Path), "Archivo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                             });
                                             return;
                                         }
@@ -162,7 +166,7 @@ namespace Backoffice
                                 }
 
 
-                            });
+                            }));
                         }
 
                     }
@@ -201,7 +205,7 @@ namespace Backoffice
                 if (item is Cliente)
                 {
                     Cliente cliente = (Cliente)item;
-                    EnviarMensaje(cliente, mensaje, cliente.ID != null ? new() { ID = cliente.ID, Nombre = cliente.Nombre } : null);
+                    EnviarMensaje(cliente, mensaje, cliente.ID != null ? new Broadcast() { ID = cliente.ID, Nombre = cliente.Nombre } : null);
                 }
                 else if (item is Broadcast)
                 {
@@ -220,7 +224,7 @@ namespace Backoffice
                     }
                     else
                     {
-                        Cliente? cliente = CanalClientes.FirstOrDefault(c => c.ID == broadcast?.ID);
+                        Cliente cliente = CanalClientes.FirstOrDefault(c => c.ID == broadcast?.ID);
                         if (cliente != null)
                             EnviarMensaje(cliente, mensaje);
                     }
@@ -342,7 +346,7 @@ namespace Backoffice
             }
         }
 
-        private void CrearTicTacToe(string? idJuego, string idDevice, string idJugador1, string? idJugador2, string turno, Cliente cliente, int? posicion = null)
+        private void CrearTicTacToe(string idJuego, string idDevice, string idJugador1, string idJugador2, string turno, Cliente cliente, int? posicion = null)
         {
             var juego = TicTacToes.FirstOrDefault(t => t.IdJuego == idJuego);
 
@@ -357,17 +361,19 @@ namespace Backoffice
                 if (idJugador2 != null)
                     juego.IdJugador2 = idJugador2;
                 juego.Turno = turno;
-                juego.OnSelectedItem = (string idJuego, string idJugador, int posicion) =>
+
+                TicTacToeForm.ListenerSelectedItem del = (string a, string b, int c) =>
                 {
                     TicTacToeInfo ticTacToe = new TicTacToeInfo();
-                    ticTacToe.IdJuego = idJuego;
+                    ticTacToe.IdJuego = a;
                     ticTacToe.IdDevice = Device;
                     ticTacToe.IdJugador1 = juego.IdJugador1;
                     ticTacToe.IdJugador2 = juego.IdJugador2;
-                    ticTacToe.Posicion = posicion;
-                    ticTacToe.Turno = idJugador;
+                    ticTacToe.Posicion = c;
+                    ticTacToe.Turno = b;
                     EnviarMensaje(juego.ClienteCanal, string.Empty, null, ticTacToe);
                 };
+                juego.OnSelectedItem = del;
 
                 juego.Show();
                 TicTacToes.Add(juego);
@@ -412,22 +418,22 @@ namespace Backoffice
                                     archivo.ID = ID;
                                     archivo.Content = buffer;
 
-                                    Invoke(() =>
+                                    Invoke(new Action(()=>
                                     {
                                         Cliente cliente = (Cliente)item;
                                         EnviarMensaje(cliente, string.Empty, null, null, archivo);
-                                    });
+                                    }));
                                 }
 
                                 archivo = new ArchivoInfo();
                                 archivo.ID = ID;
                                 archivo.IsCompleto = true;
                                 archivo.Name = fileInfo.Name;
-                                Invoke(() =>
+                                Invoke(new Action(() =>
                                 {
                                     Cliente cliente = (Cliente)item;
                                     EnviarMensaje(cliente, string.Format("Archivo {0} enviado", fileInfo.Name), null, null, archivo);
-                                });
+                                }));
                             }
                         });
                     }

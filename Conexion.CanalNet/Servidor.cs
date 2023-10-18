@@ -1,10 +1,12 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
 using Conexion.Security;
-using System.Globalization;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Conexion.Canal
 {

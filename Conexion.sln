@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backoffice", "Windows\Backoffice\Backoffice.csproj", "{72BDCD2C-A1F5-494D-B2AA-309C77564057}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Backoffice", "Windows\Backoffice\Backoffice.csproj", "{72BDCD2C-A1F5-494D-B2AA-309C77564057}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conexion.Canal", "Business\Conexion.Canal\Conexion.Canal.csproj", "{625D272B-F57B-4498-8924-9E2FCC18DF95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Conexion.Canal", "Business\Conexion.Canal\Conexion.Canal.csproj", "{625D272B-F57B-4498-8924-9E2FCC18DF95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conexion.Backoffice", "Conexion.Backoffice\Conexion.Backoffice.csproj", "{9E73130A-217E-4C4D-AD2F-3D137ABC1CE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conexion.CanalNet", "Conexion.CanalNet\Conexion.CanalNet.csproj", "{C9578744-5C01-43A8-B3EA-FA1DDDD9BC4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{625D272B-F57B-4498-8924-9E2FCC18DF95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{625D272B-F57B-4498-8924-9E2FCC18DF95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{625D272B-F57B-4498-8924-9E2FCC18DF95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E73130A-217E-4C4D-AD2F-3D137ABC1CE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E73130A-217E-4C4D-AD2F-3D137ABC1CE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E73130A-217E-4C4D-AD2F-3D137ABC1CE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E73130A-217E-4C4D-AD2F-3D137ABC1CE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9578744-5C01-43A8-B3EA-FA1DDDD9BC4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9578744-5C01-43A8-B3EA-FA1DDDD9BC4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9578744-5C01-43A8-B3EA-FA1DDDD9BC4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9578744-5C01-43A8-B3EA-FA1DDDD9BC4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

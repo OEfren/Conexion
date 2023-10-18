@@ -11,7 +11,7 @@ namespace Conexion.Canal
 {
     public class Cliente : Canal
     {
-        public string? ID { get; set; }
+        public string ID { get; set; }
 
         public List<string> Mensajes = new List<string>();
 
