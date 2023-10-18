@@ -50,7 +50,7 @@ namespace Conexion.Canal
                                         Console.WriteLine(mensaje.ToString());
                                         string key = mensaje.Substring(0, 36);
                                         mensaje = mensaje.Substring(36);
-                                        MensajeInfo info = JsonConvert.DeserializeObject<MensajeInfo>(Encrypter.DecryptString(mensaje, key));
+                                        MensajeInfo info = JsonConvert.DeserializeObject<MensajeInfo>(mensaje.StartsWith("{") ? mensaje : Encrypter.DecryptString(mensaje, key));
                                         if (info != null && ListenerNuevoMensaje != null)
                                             ListenerNuevoMensaje(info);
                                     }

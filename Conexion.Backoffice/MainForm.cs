@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -53,7 +54,7 @@ namespace Backoffice
                             {
                                 if (info != null)
                                 {
-                                    string mensaje = string.Format("Recibido: {0}", info.Mensaje);
+                                    string mensaje = string.Format("Recibido: {0}", info.Mensaje ?? string.Empty);
 
                                     Cliente canal = null;
 
@@ -230,9 +231,56 @@ namespace Backoffice
                     }
                 }
                 string mensajeText = string.Format("Enviado: {0}", mensaje);
-                txtHistorial.AppendText(mensajeText);
-                txtHistorial.AppendText(Environment.NewLine);
+                txtHistorial2.AppendText(mensajeText);
+                txtHistorial2.AppendText(Environment.NewLine);
                 txtMensaje.Text = "";
+            }
+            else
+            {
+                MessageBox.Show("Seleccione un contacto de la lista", "Cliente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btn1_Click(object sender, EventArgs e)
+        {
+            var item = lvContacto.SelectedItem;
+            if (item != null)
+            {
+                string mensaje = "Emoji:" + ((Button)sender).Tag.ToString();
+                if (item is Cliente)
+                {
+                    Cliente cliente = (Cliente)item;
+                    
+                    EnviarMensaje(cliente, mensaje, cliente.ID != null ? new Broadcast() { ID = cliente.ID, Nombre = cliente.Nombre } : null);
+                }
+                else if (item is Broadcast)
+                {
+                    Broadcast broadcast = (Broadcast)item;
+                    if (broadcast.IdPropietario == Device)
+                    {
+                        broadcast.Mensajes.Add(txtMensaje.Text);
+                        foreach (var cliente in lvContacto.Items)
+                        {
+                            if (cliente != null && cliente is Cliente)
+                            {
+                                if (((Cliente)cliente).ID == null)
+                                    EnviarMensaje((Cliente)cliente, mensaje, (Broadcast)item);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Cliente cliente = CanalClientes.FirstOrDefault(c => c.ID == broadcast?.ID);
+                        if (cliente != null)
+                            EnviarMensaje(cliente, mensaje);
+                    }
+                }
+                string mensajeText = string.Format("Enviado: {0}", mensaje);
+                byte[] image = System.IO.File.ReadAllBytes("Image/" + mensaje.Replace("Emoji:", string.Empty) + ".png");
+                var ms = new MemoryStream(image);
+                Clipboard.SetImage(Image.FromStream(ms));
+                txtHistorial2.Paste();
+                txtHistorial2.AppendText(Environment.NewLine);
             }
             else
             {
@@ -301,22 +349,46 @@ namespace Backoffice
                 {
                     Cliente cliente = (Cliente)item;
                     Text = string.Format("{0}:{1} Chateando con {0} ", CanalServidor.Ip, CanalServidor.Port, cliente.Nombre);
-                    txtHistorial.Text = string.Empty;
+                    txtHistorial2.Clear();
                     cliente.Mensajes.ForEach(mensaje =>
                     {
-                        txtHistorial.AppendText(mensaje);
-                        txtHistorial.AppendText(Environment.NewLine);
+
+                        if (!mensaje.StartsWith("Recibido: Emoji:"))
+                        {
+                            txtHistorial2.AppendText(mensaje.ToString());
+                            txtHistorial2.AppendText(Environment.NewLine);
+                        }
+                        else
+                        {
+                            byte[] image = System.IO.File.ReadAllBytes("Image/" + mensaje.Replace("Recibido: Emoji:", string.Empty) + ".png");
+                            var ms = new MemoryStream(image);
+                            Clipboard.SetImage(Image.FromStream(ms));
+                            txtHistorial2.Paste();
+                            txtHistorial2.AppendText(Environment.NewLine);
+                        }
                     });
                 }
                 else
                 {
                     Broadcast broadcast = (Broadcast)item;
                     Text = string.Format("Canal {0} ", broadcast.Nombre);
-                    txtHistorial.Text = string.Empty;
+                    txtHistorial2.Clear();
                     broadcast.Mensajes.ForEach(mensaje =>
                     {
-                        txtHistorial.AppendText(mensaje);
-                        txtHistorial.AppendText(Environment.NewLine);
+
+                        if (!mensaje.StartsWith("Emoji:"))
+                        {
+                            txtHistorial2.AppendText(mensaje.ToString());
+                            txtHistorial2.AppendText(Environment.NewLine);
+                        }
+                        else
+                        {
+                            byte[] image = System.IO.File.ReadAllBytes("Image/" + mensaje.Replace("Recibido: Emoji:", string.Empty) + ".png");
+                            var ms = new MemoryStream(image);
+                            Clipboard.SetImage(Image.FromStream(ms));
+                            txtHistorial2.Paste();
+                            txtHistorial2.AppendText(Environment.NewLine);
+                        }
                     });
                 }
             }
@@ -445,5 +517,7 @@ namespace Backoffice
                 MessageBox.Show("Ocurrió un problema al enviar el archivo", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        
     }
 }

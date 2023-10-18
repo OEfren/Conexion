@@ -32,7 +32,6 @@ namespace Backoffice
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.txtHistorial = new System.Windows.Forms.TextBox();
             this.txtMensaje = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnEnviar = new System.Windows.Forms.Button();
@@ -45,35 +44,27 @@ namespace Backoffice
             this.btnAgregar = new System.Windows.Forms.Button();
             this.btnCanal = new System.Windows.Forms.Button();
             this.dlgFile = new System.Windows.Forms.OpenFileDialog();
+            this.txtHistorial2 = new System.Windows.Forms.RichTextBox();
+            this.btn1 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // txtHistorial
-            // 
-            this.txtHistorial.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtHistorial.Location = new System.Drawing.Point(116, 23);
-            this.txtHistorial.Multiline = true;
-            this.txtHistorial.Name = "txtHistorial";
-            this.txtHistorial.ReadOnly = true;
-            this.txtHistorial.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtHistorial.Size = new System.Drawing.Size(388, 344);
-            this.txtHistorial.TabIndex = 0;
             // 
             // txtMensaje
             // 
             this.txtMensaje.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtMensaje.Location = new System.Drawing.Point(116, 396);
+            this.txtMensaje.Location = new System.Drawing.Point(119, 387);
             this.txtMensaje.Name = "txtMensaje";
-            this.txtMensaje.Size = new System.Drawing.Size(319, 20);
+            this.txtMensaje.Size = new System.Drawing.Size(671, 20);
             this.txtMensaje.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(116, 380);
+            this.label1.Location = new System.Drawing.Point(116, 371);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(47, 13);
             this.label1.TabIndex = 2;
@@ -82,7 +73,7 @@ namespace Backoffice
             // btnEnviar
             // 
             this.btnEnviar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnEnviar.Location = new System.Drawing.Point(439, 396);
+            this.btnEnviar.Location = new System.Drawing.Point(796, 387);
             this.btnEnviar.Name = "btnEnviar";
             this.btnEnviar.Size = new System.Drawing.Size(64, 20);
             this.btnEnviar.TabIndex = 3;
@@ -111,14 +102,14 @@ namespace Backoffice
             // mnuItemTicTacToe
             // 
             this.mnuItemTicTacToe.Name = "mnuItemTicTacToe";
-            this.mnuItemTicTacToe.Size = new System.Drawing.Size(180, 22);
+            this.mnuItemTicTacToe.Size = new System.Drawing.Size(161, 22);
             this.mnuItemTicTacToe.Text = "Jugar Tic Tac Toe";
             this.mnuItemTicTacToe.Click += new System.EventHandler(this.mnuItemTicTacToe_Click);
             // 
             // mnuItemEnviarArchivo
             // 
             this.mnuItemEnviarArchivo.Name = "mnuItemEnviarArchivo";
-            this.mnuItemEnviarArchivo.Size = new System.Drawing.Size(180, 22);
+            this.mnuItemEnviarArchivo.Size = new System.Drawing.Size(161, 22);
             this.mnuItemEnviarArchivo.Text = "Enviar archivo...";
             this.mnuItemEnviarArchivo.Click += new System.EventHandler(this.mnuItemEnviarArchivo_Click);
             // 
@@ -164,11 +155,68 @@ namespace Backoffice
             // 
             this.dlgFile.FileName = "openFileDialog1";
             // 
+            // txtHistorial2
+            // 
+            this.txtHistorial2.Location = new System.Drawing.Point(119, 24);
+            this.txtHistorial2.Name = "txtHistorial2";
+            this.txtHistorial2.Size = new System.Drawing.Size(741, 341);
+            this.txtHistorial2.TabIndex = 9;
+            this.txtHistorial2.Text = "";
+            // 
+            // btn1
+            // 
+            this.btn1.Location = new System.Drawing.Point(119, 413);
+            this.btn1.Name = "btn1";
+            this.btn1.Size = new System.Drawing.Size(100, 20);
+            this.btn1.TabIndex = 11;
+            this.btn1.Tag = "1";
+            this.btn1.Text = "Feliz";
+            this.btn1.UseVisualStyleBackColor = true;
+            this.btn1.Click += new System.EventHandler(this.btn1_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(225, 413);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(100, 20);
+            this.button1.TabIndex = 12;
+            this.button1.Tag = "2";
+            this.button1.Text = "Riendo";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.btn1_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(331, 413);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(100, 20);
+            this.button2.TabIndex = 13;
+            this.button2.Tag = "3";
+            this.button2.Text = "Carcajada";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.btn1_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(437, 413);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(100, 20);
+            this.button3.TabIndex = 14;
+            this.button3.Tag = "4";
+            this.button3.Text = "Sorprendido";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.btn1_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(513, 429);
+            this.ClientSize = new System.Drawing.Size(898, 450);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btn1);
+            this.Controls.Add(this.txtHistorial2);
             this.Controls.Add(this.btnCanal);
             this.Controls.Add(this.btnAgregar);
             this.Controls.Add(this.label3);
@@ -177,7 +225,6 @@ namespace Backoffice
             this.Controls.Add(this.btnEnviar);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtMensaje);
-            this.Controls.Add(this.txtHistorial);
             this.Name = "MainForm";
             this.Text = "Chat";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -188,8 +235,6 @@ namespace Backoffice
         }
 
         #endregion
-
-        private TextBox txtHistorial;
         private TextBox txtMensaje;
         private Label label1;
         private Button btnEnviar;
@@ -202,5 +247,10 @@ namespace Backoffice
         private ToolStripMenuItem mnuItemTicTacToe;
         private ToolStripMenuItem mnuItemEnviarArchivo;
         private OpenFileDialog dlgFile;
+        private RichTextBox txtHistorial2;
+        private Button btn1;
+        private Button button1;
+        private Button button2;
+        private Button button3;
     }
 }

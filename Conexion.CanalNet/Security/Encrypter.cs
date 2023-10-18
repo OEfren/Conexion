@@ -12,7 +12,7 @@ namespace Conexion.Security
 
         public static string EncryptString(string text, string key)
         {
-            /*
+            
             int Temp, j, n;
             int[] UserKeyASCIIS;
             int[] TextASCIIS;
@@ -41,13 +41,10 @@ namespace Conexion.Security
                 rtn += System.Convert.ToChar(Temp);
             }
             return rtn;
-            */
-            return text;
         }
 
         public static string DecryptString(string text, string key)
         {
-            /*+
             int Temp, j, n;
             int[] UserKeyASCIIS;
             int[] TextASCIIS;
@@ -80,8 +77,6 @@ namespace Conexion.Security
                 rtn += System.Convert.ToChar(Temp);
             }
             return rtn;
-            */
-            return text;
         }
 
     }
