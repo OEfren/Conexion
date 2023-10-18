@@ -376,7 +376,7 @@ namespace Backoffice
                     broadcast.Mensajes.ForEach(mensaje =>
                     {
 
-                        if (!mensaje.StartsWith("Emoji:"))
+                        if (!mensaje.StartsWith("Recibido: Emoji:"))
                         {
                             txtHistorial2.AppendText(mensaje.ToString());
                             txtHistorial2.AppendText(Environment.NewLine);

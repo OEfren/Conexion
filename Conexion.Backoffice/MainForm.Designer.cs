@@ -157,6 +157,9 @@ namespace Backoffice
             // 
             // txtHistorial2
             // 
+            this.txtHistorial2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txtHistorial2.Location = new System.Drawing.Point(119, 24);
             this.txtHistorial2.Name = "txtHistorial2";
             this.txtHistorial2.Size = new System.Drawing.Size(741, 341);
@@ -165,6 +168,7 @@ namespace Backoffice
             // 
             // btn1
             // 
+            this.btn1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btn1.Location = new System.Drawing.Point(119, 413);
             this.btn1.Name = "btn1";
             this.btn1.Size = new System.Drawing.Size(100, 20);
@@ -176,6 +180,7 @@ namespace Backoffice
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button1.Location = new System.Drawing.Point(225, 413);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(100, 20);
@@ -187,6 +192,7 @@ namespace Backoffice
             // 
             // button2
             // 
+            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button2.Location = new System.Drawing.Point(331, 413);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(100, 20);
@@ -198,6 +204,7 @@ namespace Backoffice
             // 
             // button3
             // 
+            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button3.Location = new System.Drawing.Point(437, 413);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(100, 20);
